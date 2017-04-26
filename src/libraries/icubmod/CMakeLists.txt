@@ -23,6 +23,7 @@ else(WIP_FEATURE_CHECK_PROTOCOL_VERSION)
 endif(WIP_FEATURE_CHECK_PROTOCOL_VERSION)
 
 yarp_begin_plugin_library(icubmod)
+  add_subdirectory(safeMotionControl)
   add_subdirectory(canBusMotionControl)
   add_subdirectory(cartesianController)
   add_subdirectory(cfw2Can)
