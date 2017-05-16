@@ -215,7 +215,7 @@ R1Model::R1Model() : RobotModel()
 
 	Cover *cover[NPARTS];
 
-	cover[BASE] = NULL;
+	cover[BASE] = new Cover(mRoot);
 	cover[TORSO] = new Cover(torsoYaw);
 	cover[LEFT_UPPER_ARM] = new Cover(upperArmL);
 	cover[LEFT_LOWER_ARM] = new Cover(prosupL);
@@ -229,32 +229,59 @@ R1Model::R1Model() : RobotModel()
 
 #define STORE_SPHERE sphere_list.push_back(NULL); sphere_list.back() = 
 
-	STORE_SPHERE cover[TORSO]->addSphere(0.05, 0.0, 0.03, 0.08, "3_0", torsoYaw->Toj);
-	STORE_SPHERE cover[TORSO]->addSphere(-0.04, -0.06, 0.03, 0.08, "3_1", torsoYaw->Toj);
-	STORE_SPHERE cover[TORSO]->addSphere(-0.04, 0.06, 0.03, 0.08, "3_2", torsoYaw->Toj);
-	STORE_SPHERE cover[TORSO]->addSphere(0.08, 0.0, 0.12, 0.09, "3_3", torsoYaw->Toj);
-	STORE_SPHERE cover[TORSO]->addSphere(0.01, -0.06, 0.12, 0.09, "3_4", torsoYaw->Toj);
-	STORE_SPHERE cover[TORSO]->addSphere(0.01, 0.06, 0.12, 0.09, "3_5", torsoYaw->Toj);
-	STORE_SPHERE cover[TORSO]->addSphere(0.1, 0.0, 0.21, 0.09, "3_6", torsoYaw->Toj);
-	STORE_SPHERE cover[TORSO]->addSphere(0.03, -0.07, 0.21, 0.09, "3_7", torsoYaw->Toj);
-	STORE_SPHERE cover[TORSO]->addSphere(0.03, 0.07, 0.21, 0.09, "3_8", torsoYaw->Toj);
-	STORE_SPHERE cover[TORSO]->addSphere(0.12, 0.0, 0.3, 0.08, "3_9", torsoYaw->Toj);
-	STORE_SPHERE cover[TORSO]->addSphere(0.06, -0.1, 0.32, 0.07, "3_10", torsoYaw->Toj);
-	STORE_SPHERE cover[TORSO]->addSphere(0.06, 0.1, 0.32, 0.07, "3_11", torsoYaw->Toj);
-	STORE_SPHERE cover[TORSO]->addSphere(0.06, 0.0, 0.32, 0.07, "3_12", torsoYaw->Toj);
-	STORE_SPHERE cover[TORSO]->addSphere(0.08, -0.19, 0.37, 0.06, "3_13", torsoYaw->Toj);
-	STORE_SPHERE cover[TORSO]->addSphere(0.08, 0.19, 0.37, 0.06, "3_14", torsoYaw->Toj);
+	STORE_SPHERE cover[BASE]->addSphere(0.044 - 0.04, 0.0, 0.46, 0.12, "0_0", mRoot->Toj);
+	STORE_SPHERE cover[BASE]->addSphere(0.044 + 0.04, -0.06, 0.46, 0.12, "0_1", mRoot->Toj);
+	STORE_SPHERE cover[BASE]->addSphere(0.044 + 0.04, 0.06, 0.46, 0.12, "0_2", mRoot->Toj);
+
+	STORE_SPHERE cover[BASE]->addSphere(0.044 - 0.04, 0.0, 0.36, 0.13, "0_3", mRoot->Toj);
+	STORE_SPHERE cover[BASE]->addSphere(0.044 + 0.04, -0.06, 0.36, 0.12, "0_4", mRoot->Toj);
+	STORE_SPHERE cover[BASE]->addSphere(0.044 + 0.04, 0.06, 0.36, 0.12, "0_5", mRoot->Toj);
+
+	STORE_SPHERE cover[BASE]->addSphere(0.044 - 0.04, 0.0, 0.26, 0.13, "0_6", mRoot->Toj);
+	STORE_SPHERE cover[BASE]->addSphere(0.044 + 0.05, -0.06, 0.26, 0.11, "0_7", mRoot->Toj);
+	STORE_SPHERE cover[BASE]->addSphere(0.044 + 0.05, 0.06, 0.26, 0.11, "0_8", mRoot->Toj);
+
+	STORE_SPHERE cover[BASE]->addSphere(0.044 + 0.02, 0.0, 0.16, 0.15, "0_9", mRoot->Toj);
+	STORE_SPHERE cover[BASE]->addSphere(0.044 - 0.04, 0.0, 0.22, 0.15, "0_10", mRoot->Toj);
+
+	STORE_SPHERE cover[TORSO]->addSphere(0.04, 0.0, 0.01, 0.1, "3_0", torsoYaw->Toj);
+	STORE_SPHERE cover[TORSO]->addSphere(-0.04, -0.06, 0.01, 0.1, "3_1", torsoYaw->Toj);
+	STORE_SPHERE cover[TORSO]->addSphere(-0.04, 0.06, 0.01, 0.1, "3_2", torsoYaw->Toj);
+
+	STORE_SPHERE cover[TORSO]->addSphere(0.04, 0.0, 0.1, 0.09, "3_3", torsoYaw->Toj);
+	STORE_SPHERE cover[TORSO]->addSphere(-0.03, -0.05, 0.1, 0.09, "3_4", torsoYaw->Toj);
+	STORE_SPHERE cover[TORSO]->addSphere(-0.03, 0.05, 0.1, 0.09, "3_5", torsoYaw->Toj);
+
+	STORE_SPHERE cover[TORSO]->addSphere(0.05, 0.0, 0.18, 0.09, "3_6", torsoYaw->Toj);
+	STORE_SPHERE cover[TORSO]->addSphere(-0.01, -0.04, 0.18, 0.09, "3_7", torsoYaw->Toj);
+	STORE_SPHERE cover[TORSO]->addSphere(-0.01, 0.04, 0.18, 0.09, "3_8", torsoYaw->Toj);
+
+	STORE_SPHERE cover[TORSO]->addSphere(0.08, 0.0, 0.27, 0.09, "3_9", torsoYaw->Toj);
+	STORE_SPHERE cover[TORSO]->addSphere(0.02, -0.04, 0.27, 0.1, "3_10", torsoYaw->Toj);
+	STORE_SPHERE cover[TORSO]->addSphere(0.02, 0.04, 0.27, 0.1, "3_11", torsoYaw->Toj);
+
+	STORE_SPHERE cover[TORSO]->addSphere(0.11, 0.0, 0.35, 0.09, "3_12", torsoYaw->Toj);
+	STORE_SPHERE cover[TORSO]->addSphere(0.03, 0.0, 0.35, 0.08, "3_17", torsoYaw->Toj);
+	STORE_SPHERE cover[TORSO]->addSphere(0.06, -0.09, 0.35, 0.1, "3_13", torsoYaw->Toj);
+	STORE_SPHERE cover[TORSO]->addSphere(0.06, 0.09, 0.35, 0.1, "3_14", torsoYaw->Toj);
+	STORE_SPHERE cover[TORSO]->addSphere(0.1, -0.11, 0.35, 0.08, "3_15", torsoYaw->Toj);
+	STORE_SPHERE cover[TORSO]->addSphere(0.1, 0.11, 0.35, 0.08, "3_16", torsoYaw->Toj);
+
+	STORE_SPHERE cover[TORSO]->addSphere(0.08, -0.19, 0.37, 0.06, "3_18", torsoYaw->Toj);
+	STORE_SPHERE cover[TORSO]->addSphere(0.08, 0.19, 0.37, 0.06, "3_19", torsoYaw->Toj);
 
 	STORE_SPHERE cover[LEFT_UPPER_ARM]->addSphere(0.0, 0.0, 0.0, 0.035, "6_0", upperArmL->Toj);
-	STORE_SPHERE cover[LEFT_UPPER_ARM]->addSphere(0.0, 0.06, 0.0, 0.045, "6_1", upperArmL->Toj);
-	STORE_SPHERE cover[LEFT_UPPER_ARM]->addSphere(0.0, 0.12, 0.0, 0.045, "6_2", upperArmL->Toj);
-	STORE_SPHERE cover[LEFT_UPPER_ARM]->addSphere(0.0, 0.18, 0.0, 0.045, "6_3", upperArmL->Toj);
+	STORE_SPHERE cover[LEFT_UPPER_ARM]->addSphere(0.0, 0.06, 0.0, 1.1*0.045, "6_1", upperArmL->Toj);
+	STORE_SPHERE cover[LEFT_UPPER_ARM]->addSphere(0.0, 0.12, 0.0, 1.2*0.045, "6_2", upperArmL->Toj);
+	STORE_SPHERE cover[LEFT_UPPER_ARM]->addSphere(0.0, 0.18, 0.0, 1.3*0.045, "6_3", upperArmL->Toj);
 
 	STORE_SPHERE cover[LEFT_LOWER_ARM]->addSphere(0.0, 0.0, 0.0, 0.0375, "8_0", prosupL->Toj);
-	STORE_SPHERE cover[LEFT_LOWER_ARM]->addSphere(0.0, 0.0, -0.04, 0.04, "8_1", prosupL->Toj);
-	STORE_SPHERE cover[LEFT_LOWER_ARM]->addSphere(0.0, 0.0, -0.10, 0.0425, "8_2", prosupL->Toj);
-	STORE_SPHERE cover[LEFT_LOWER_ARM]->addSphere(0.0, 0.0, -0.16, 0.045, "8_3", prosupL->Toj);
-	STORE_SPHERE cover[LEFT_LOWER_ARM]->addSphere(0.0, 0.0, -0.22, 0.0425, "8_4", prosupL->Toj);
+	STORE_SPHERE cover[LEFT_LOWER_ARM]->addSphere(0.0, 0.0, -0.04, 1.1*0.04, "8_1", prosupL->Toj);
+	STORE_SPHERE cover[LEFT_LOWER_ARM]->addSphere(0.0, 0.0, -0.07, 1.1*0.0425, "8_2", prosupL->Toj);
+	STORE_SPHERE cover[LEFT_LOWER_ARM]->addSphere(0.0, 0.0, -0.10, 1.1*0.0425, "8_3", prosupL->Toj);
+	STORE_SPHERE cover[LEFT_LOWER_ARM]->addSphere(0.0, 0.0, -0.13, 1.1*0.0425, "8_4", prosupL->Toj);
+	STORE_SPHERE cover[LEFT_LOWER_ARM]->addSphere(0.0, 0.0, -0.16, 1.1*0.045, "8_5", prosupL->Toj);
+	STORE_SPHERE cover[LEFT_LOWER_ARM]->addSphere(0.0, 0.0, -0.22, 1.1*0.0425, "8_6", prosupL->Toj);
 
 	STORE_SPHERE cover[LEFT_HAND]->addSphere(0.0, 0.0, 0.02, 0.02, "11_0", mHand[L]->Toj);
 	STORE_SPHERE cover[LEFT_HAND]->addSphere(-0.04, 0.0, 0.01, 0.03, "11_1", mHand[L]->Toj);
@@ -264,15 +291,15 @@ R1Model::R1Model() : RobotModel()
 	STORE_SPHERE cover[LEFT_HAND]->addSphere(-0.01, 0.0, -0.03, 0.016, "11_5", mHand[L]->Toj);
 
 	STORE_SPHERE cover[RIGHT_UPPER_ARM]->addSphere(0.0, 0.0, 0.0, 0.035, "14_0", upperArmR->Toj);
-	STORE_SPHERE cover[RIGHT_UPPER_ARM]->addSphere(0.0, 0.06, 0.0, 0.045, "14_1", upperArmR->Toj);
-	STORE_SPHERE cover[RIGHT_UPPER_ARM]->addSphere(0.0, 0.12, 0.0, 0.045, "14_2", upperArmR->Toj);
-	STORE_SPHERE cover[RIGHT_UPPER_ARM]->addSphere(0.0, 0.18, 0.0, 0.045, "14_3", upperArmR->Toj);
+	STORE_SPHERE cover[RIGHT_UPPER_ARM]->addSphere(0.0, 0.06, 0.0, 1.1*0.045, "14_1", upperArmR->Toj);
+	STORE_SPHERE cover[RIGHT_UPPER_ARM]->addSphere(0.0, 0.12, 0.0, 1.2*0.045, "14_2", upperArmR->Toj);
+	STORE_SPHERE cover[RIGHT_UPPER_ARM]->addSphere(0.0, 0.18, 0.0, 1.3*0.045, "14_3", upperArmR->Toj);
 
 	STORE_SPHERE cover[RIGHT_LOWER_ARM]->addSphere(0.0, 0.0, 0.0, 0.0375, "16_0", prosupR->Toj);
-	STORE_SPHERE cover[RIGHT_LOWER_ARM]->addSphere(0.0, 0.0, -0.04, 0.04, "16_1", prosupR->Toj);
-	STORE_SPHERE cover[RIGHT_LOWER_ARM]->addSphere(0.0, 0.0, -0.10, 0.0425, "16_2", prosupR->Toj);
-	STORE_SPHERE cover[RIGHT_LOWER_ARM]->addSphere(0.0, 0.0, -0.16, 0.045, "16_3", prosupR->Toj);
-	STORE_SPHERE cover[RIGHT_LOWER_ARM]->addSphere(0.0, 0.0, -0.22, 0.0425, "16_4", prosupR->Toj);
+	STORE_SPHERE cover[RIGHT_LOWER_ARM]->addSphere(0.0, 0.0, -0.04, 1.1*0.04, "16_1", prosupR->Toj);
+	STORE_SPHERE cover[RIGHT_LOWER_ARM]->addSphere(0.0, 0.0, -0.10, 1.1*0.0425, "16_2", prosupR->Toj);
+	STORE_SPHERE cover[RIGHT_LOWER_ARM]->addSphere(0.0, 0.0, -0.16, 1.1*0.045, "16_3", prosupR->Toj);
+	STORE_SPHERE cover[RIGHT_LOWER_ARM]->addSphere(0.0, 0.0, -0.22, 1.1*0.0425, "16_4", prosupR->Toj);
 
 	STORE_SPHERE cover[RIGHT_HAND]->addSphere(0.0, 0.0, -0.02, 0.02, "19_0", mHand[R]->Toj);
 	STORE_SPHERE cover[RIGHT_HAND]->addSphere(-0.04, 0.0, -0.01, 0.03, "19_1", mHand[R]->Toj);

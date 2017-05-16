@@ -146,10 +146,13 @@ namespace icub
 				}
 			}
 
-			Xa /= r;
-			Xb /= r;
-			Ud.normalize();
-
+            if (r > 0.0)
+            {
+                Xa /= r;
+                Xb /= r;
+                Ud.normalize();
+            }
+            
 			return D;
 		}
 
