@@ -194,33 +194,55 @@ public:
 
             int part;
 
+            printf("\n%s\n\n", p[i]->key.c_str());
+
             if (p[i]->key == "torso") part = TORSO;
             else if (p[i]->key == "head") part = HEAD;
             else if (p[i]->key == "left_upper_arm") part = LEFT_UPPER_ARM;
             else if (p[i]->key == "left_lower_arm") part = LEFT_LOWER_ARM;
             else if (p[i]->key == "right_upper_arm") part = RIGHT_UPPER_ARM;
             else if (p[i]->key == "right_lower_arm") part = RIGHT_LOWER_ARM;
-            else return false;
+            else continue; // return false;
 
             p[i]->poly->view(pEncFbk[part]);
 
-            if (!pEncFbk[part]) return false;
+            if (!pEncFbk[part])
+            {
+                printf("\npEncFbk[%d] == NULL\n\n", part);
+                return false;
+            }
 
             p[i]->poly->view(pPosCtrl[part]);
 
-            if (!pPosCtrl[part]) return false;
+            if (!pPosCtrl[part])
+            {
+                printf("\pPosCtrl[%d] == NULL\n\n", part);
+                return false;
+            }
 
             p[i]->poly->view(pVelCtrl[part]);
             
-            if (!pVelCtrl[part]) return false;
+            if (!pVelCtrl[part])
+            {
+                printf("\pVelCtrl[%d] == NULL\n\n", part);
+                return false;
+            }
 
             p[i]->poly->view(pDirCtrl[part]);
 
-            if (!pDirCtrl[part]) return false;
+            if (!pDirCtrl[part])
+            {
+                printf("\pDirCtrl[%d] == NULL\n\n", part);
+                return false;
+            }
 
             p[i]->poly->view(pCtrlMode[part]);
 
-            if (!pCtrlMode[part]) return false;
+            if (!pCtrlMode[part])
+            {
+                printf("\pCtrlMode[%d] == NULL\n\n", part);
+                return false;
+            }
 		}
 
         start();
