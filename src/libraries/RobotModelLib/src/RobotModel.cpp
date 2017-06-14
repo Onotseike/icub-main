@@ -34,11 +34,9 @@ void RobotModel::calcInterference(Matrix &distance)
 			cover_list[c]->pose();
 		}
 
-		Vec3 Xa, Xb, Ud;
-
 		for (unsigned int i = 0; i < interference.size(); ++i)
 		{
-			selfDistance(i) = repulsion(interference[i]->coverA, interference[i]->coverB, Xa, Xb, Ud);
+			selfDistance(i) = repulsion(interference[i]->coverA, interference[i]->coverB, Xa[i], Xb[i]);
 		}
 	}
 
@@ -58,19 +56,19 @@ const Matrix& RobotModel::calcInterferenceAndJ(Matrix &distance)
 			cover_list[c]->pose();
 		}
 
-		Vec3 Xa, Xb, Ud;
-
 		for (unsigned int i = 0; i < interference.size(); ++i)
 		{
-			selfDistance(i) = repulsion(interference[i]->coverA, interference[i]->coverB, Xa, Xb, Ud);
+			selfDistance(i) = repulsion(interference[i]->coverA, interference[i]->coverB, Xa[i], Xb[i]);
 
 			Component *solidA = interference[i]->coverA->part;
+
+			Vec3 U = (Xa[i] - Xb[i]).norm();
 
 			for (unsigned int d = 0; d < interference[i]->jdep.size(); ++d)
 			{
 				int j = interference[i]->jdep[d];
 
-				Jself(i, j) = Ud * (solidA->Voj[j] + (solidA->Zoj[j] % (Xa - solidA->Poj[j])));
+                Jself(i, j) = U * (solidA->Voj[j] + (solidA->Zoj[j] % (Xa[i] - solidA->Poj[j])));
 			}
 		}
 	}

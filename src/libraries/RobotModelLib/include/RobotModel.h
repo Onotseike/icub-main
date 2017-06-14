@@ -107,7 +107,7 @@ namespace icub
 
 			//virtual const Matrix& calcInterference(Vec3* Xa, Vec3* Xb, Vec3* Ud, Matrix &distance);
 
-			virtual const Matrix& calcHandJacobian(int hand)
+			virtual const Matrix& getHandJacobian(int hand)
 			{
 				mHand[hand]->getJ(Jhand[hand]);
 
@@ -135,6 +135,11 @@ namespace icub
 				name = sphere_list[s]->name;
 			}
 
+            int getNpoints(){ return Xa.size(); }
+            Vec3& getXa(int i){ return Xa[i]; }
+            Vec3& getXb(int i){ return Xb[i]; }
+            double getD(int i){ return selfDistance(i); }
+
 			int getNSpheres(){ return sphere_list.size(); }
 
 			enum { R = 0, L = 1 };
@@ -156,6 +161,9 @@ namespace icub
 			std::vector<Interference*> interference;
 			std::vector<Cover*> cover_list;
 			std::vector<Sphere*> sphere_list;
+
+            std::vector<Vec3> Xa;
+            std::vector<Vec3> Xb;
 
 			std::vector<Component*> heavy_part;
 

@@ -112,47 +112,56 @@ namespace icub
 			Component *part;
 		};
 
-		inline double repulsion(Cover *Ca, Cover *Cb, Vec3 &Xa, Vec3 &Xb, Vec3& Ud)
+		inline double repulsion(Cover *Ca, Cover *Cb, Vec3 &Xa, Vec3 &Xb)
 		{
-			Vec3 A;
-			Vec3 B;
-			Vec3 U;
-
 			Xa.clear();
 			Xb.clear();
-			Ud.clear();
 
-			double r = 0.0;
-
+			double Z = 0.0;
 			double D = 1E10;
 
 			for (int a = 0; a < Ca->nspheres; ++a)
 			{
 				for (int b = 0; b < Cb->nspheres; ++b)
 				{
-					double d = distance(*(Ca->sphere[a]), *(Cb->sphere[b]), A, B, U);
+					Sphere* Sa = Ca->sphere[a];
+					Vec3 A = Sa->Cworld;
+
+					Sphere* Sb = Cb->sphere[b];
+					Vec3 B = Sb->Cworld;
+
+					Vec3 U = A - B;
+
+					double d = U.normalize() - (Sa->radius + Sb->radius);
 
 					if (d < D) D = d;
 
-					static const double S = -1.0 / (0.05*0.05);
+					if (d >= 0.0)
+					{
+						A -= Sa->radius*U;
+						B += Sb->radius*U;
+					}
+					else
+					{
+						A += Sa->radius*U;
+						B -= Sb->radius*U;
+					}
 
-					double s = exp(d*fabs(d)*S);
+					double z = exp(-d*fabs(d) / (0.04*0.04));
 
-					Xa += s*A;
-					Xb += s*B;
-					Ud += s*U;
+					Xa += z*A;
+					Xb += z*B;
 
-					r += s;
+					Z += z;
 				}
 			}
 
-            if (r > 0.0)
-            {
-                Xa /= r;
-                Xb /= r;
-                Ud.normalize();
-            }
-            
+			if (Z > 0.0)
+			{
+				Xa /= Z;
+				Xb /= Z;
+			}
+
 			return D;
 		}
 
@@ -165,7 +174,7 @@ namespace icub
 			{
 				init(pA, pB);
 
-				for (int j = j0; j <= j0; ++j) addJointDep(j);
+				for (int j = j0; j <= j1; ++j) addJointDep(j);
 			}
 
 			Interference(Cover *pA, Cover *pB)

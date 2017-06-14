@@ -79,6 +79,19 @@ public:
             {
                 noflood = 0;
                 printf("\nUNSAFE %d\n\n", ++n);
+                mD.t().dump();
+            }
+        }
+        else
+        {
+            static unsigned int n = 0;
+            static int noflood = 0;
+
+            if (++noflood >= 200)
+            {
+                noflood = 0;
+                printf("\nsafe %d\n\n", ++n);
+                mD.t().dump();
             }
         }
 	}
@@ -196,12 +209,12 @@ public:
 
             printf("\n%s\n\n", p[i]->key.c_str());
 
-            if (p[i]->key == "torso") part = TORSO;
-            else if (p[i]->key == "head") part = HEAD;
-            else if (p[i]->key == "left_upper_arm") part = LEFT_UPPER_ARM;
-            else if (p[i]->key == "left_lower_arm") part = LEFT_LOWER_ARM;
-            else if (p[i]->key == "right_upper_arm") part = RIGHT_UPPER_ARM;
-            else if (p[i]->key == "right_lower_arm") part = RIGHT_LOWER_ARM;
+            if (p[i]->key == "safe_torso") part = TORSO;
+            else if (p[i]->key == "safe_head") part = HEAD;
+            else if (p[i]->key == "safe_left_upper_arm") part = LEFT_UPPER_ARM;
+            else if (p[i]->key == "safe_left_lower_arm") part = LEFT_LOWER_ARM;
+            else if (p[i]->key == "safe_right_upper_arm") part = RIGHT_UPPER_ARM;
+            else if (p[i]->key == "safe_right_lower_arm") part = RIGHT_LOWER_ARM;
             else continue; // return false;
 
             p[i]->poly->view(pEncFbk[part]);
@@ -216,7 +229,7 @@ public:
 
             if (!pPosCtrl[part])
             {
-                printf("\pPosCtrl[%d] == NULL\n\n", part);
+                printf("\npPosCtrl[%d] == NULL\n\n", part);
                 return false;
             }
 
@@ -224,7 +237,7 @@ public:
             
             if (!pVelCtrl[part])
             {
-                printf("\pVelCtrl[%d] == NULL\n\n", part);
+                printf("\npVelCtrl[%d] == NULL\n\n", part);
                 return false;
             }
 
@@ -232,7 +245,7 @@ public:
 
             if (!pDirCtrl[part])
             {
-                printf("\pDirCtrl[%d] == NULL\n\n", part);
+                printf("\npDirCtrl[%d] == NULL\n\n", part);
                 return false;
             }
 
@@ -240,10 +253,14 @@ public:
 
             if (!pCtrlMode[part])
             {
-                printf("\pCtrlMode[%d] == NULL\n\n", part);
+                printf("\npCtrlMode[%d] == NULL\n\n", part);
                 return false;
             }
 		}
+
+        mQ.resize(22,1,true);
+	    mV.resize(22,1,true);
+	    mD.resize(22,1,true);
 
         start();
 
