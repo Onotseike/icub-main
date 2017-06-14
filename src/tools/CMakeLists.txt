@@ -56,6 +56,7 @@ endif(ICUB_USE_GTK2)
 
 if(ICUB_USE_Qt5 AND ICUB_USE_OpenGL AND ICUB_USE_GLUT)
     add_subdirectory(iCubGui)
+    add_subdirectory(CERGui)
 else()
     message(STATUS "Qt5 or OpenGL or GLUT not found/selected, skipping iCubGui")
 endif()
