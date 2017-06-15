@@ -15,7 +15,7 @@
 
 using namespace icub::robot_model;
 
-#define MARGIN 0.1
+#define MARGIN 0.05
 #define PERIOD 0.01
 
 class SafeMotionControl : 
@@ -48,10 +48,23 @@ public:
 
 		for (int i = 0; i < mD.R; ++i)
 		{
-			if (mD(i) < MARGIN) safe = false;
+			if (mD(i) <= MARGIN) safe = false;
 		}
 
-		if (safe) return;
+		if (safe)
+        {
+            static unsigned int n = 0;
+            static int noflood = 0;
+
+            if (++noflood >= 200)
+            {
+                noflood = 0;
+                printf("\nsafe ABS%d\n\n", ++n);
+                mD.t().dump();
+            }
+
+            return;
+        }
 
         getVel(mV);
 
@@ -64,7 +77,7 @@ public:
 
 		for (int i = 0; i < mD.R; ++i)
 		{
-			if (dD(i) < MARGIN && dD(i) < mD(i))
+			if (dD(i) < MARGIN && dD(i) <= mD(i))
 			{
 				safe = false;
 			}
@@ -90,7 +103,7 @@ public:
             if (++noflood >= 200)
             {
                 noflood = 0;
-                printf("\nsafe %d\n\n", ++n);
+                printf("\nsafe REL%d\n\n", ++n);
                 mD.t().dump();
             }
         }
