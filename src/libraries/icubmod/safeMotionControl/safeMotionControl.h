@@ -59,7 +59,7 @@ public:
             if (++noflood >= 200)
             {
                 noflood = 0;
-                printf("\nsafe ABS%d\n\n", ++n);
+                printf("\nsafe ABS %d\n\n", ++n);
                 mD.t().dump();
             }
 
@@ -77,7 +77,7 @@ public:
 
 		for (int i = 0; i < mD.R; ++i)
 		{
-			if (dD(i) < MARGIN && dD(i) <= mD(i))
+			if (dD(i) <= MARGIN && dD(i) <= mD(i))
 			{
 				safe = false;
 			}
@@ -103,13 +103,18 @@ public:
             if (++noflood >= 200)
             {
                 noflood = 0;
-                printf("\nsafe REL%d\n\n", ++n);
+                printf("\nsafe REL %d\n\n", ++n);
                 mD.t().dump();
             }
         }
 	}
 
-	bool checkVelocity(double *v)
+    bool checkVelocity(int part, double v, int j)
+    {
+        return true;
+    }
+
+	bool checkVelocity(int part, double *v)
 	{
 		static Matrix dQ, dD;
 
@@ -160,7 +165,12 @@ public:
 		return false;
 	}
 
-	bool checkPosition(double *p)
+    bool checkPosition(int part, double p, int j)
+    {
+        return true;
+    }
+
+	bool checkPosition(int part, double *p)
 	{
 		static Matrix dQ, dD;
 
@@ -286,6 +296,11 @@ public:
 
 		return true;
 	}
+
+    int bind(std::string part)
+    {
+        return robotModel->bind(part);
+    }
 
 protected:
     enum { TORSO, HEAD, LEFT_UPPER_ARM, LEFT_LOWER_ARM, RIGHT_UPPER_ARM, RIGHT_LOWER_ARM, N_ROBOT_PARTS };

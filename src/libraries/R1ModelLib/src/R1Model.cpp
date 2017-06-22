@@ -44,6 +44,47 @@ using namespace icub::robot_model::r1;
 
 R1Model::R1Model() : RobotModel()
 {
+    int j = 0;
+    
+    lut_torso[0] = j++;
+    lut_torso[1] = j++;
+    lut_torso[2] = j++;
+    lut_torso[3] = j++;
+
+    lut_left_upper_arm[0] = j++;
+    lut_left_upper_arm[1] = j++;
+    lut_left_upper_arm[2] = j++;
+    lut_left_upper_arm[3] = j++;
+
+    lut_left_lower_arm[0] = j++;
+    lut_left_lower_arm[1] = j++;
+    lut_left_lower_arm[2] = j++;
+    lut_left_lower_arm[3] = j++;
+
+    lut_right_upper_arm[0] = j++;
+    lut_right_upper_arm[1] = j++;
+    lut_right_upper_arm[2] = j++;
+    lut_right_upper_arm[3] = j++;
+
+    lut_right_lower_arm[0] = j++;
+    lut_right_lower_arm[1] = j++;
+    lut_right_lower_arm[2] = j++;
+    lut_right_lower_arm[3] = j++;
+
+    lut_head[0] = j++;
+    lut_head[1] = j++;
+
+    lut[BASE] = NULL;
+    lut[TORSO] = lut_torso;
+    lut[LEFT_UPPER_ARM] = lut_left_upper_arm;
+    lut[LEFT_LOWER_ARM] = lut_left_lower_arm;
+    lut[LEFT_HAND] = NULL;
+    lut[RIGHT_UPPER_ARM] = lut_right_upper_arm;
+    lut[RIGHT_LOWER_ARM] = lut_right_lower_arm;
+    lut[RIGHT_HAND] = NULL;
+    lut[HEAD] = lut_head;
+
+
 	double TORSO_EXC = 0.75*TORSO_RADIUS*tan(DEG2RAD*TORSO_MAX_TILT);
 	double ARM_EXC = 0.75*ARM_RADIUS*tan(DEG2RAD*WRIST_MAX_TILT);
 

@@ -55,6 +55,26 @@ namespace icub
 					return Jgrav;
 				}
 
+                int bind(std::string part)
+                {
+                    std::size_t found = part.find_last_of("/");
+                    part = part.substr(found);
+
+                    if (part == "/torso") return TORSO;
+                    
+                    if (part == "/left_upper_arm") return LEFT_UPPER_ARM;
+                    
+                    if (part == "/left_lower_arm") return LEFT_LOWER_ARM;
+
+                    if (part == "/right_upper_arm") return RIGHT_UPPER_ARM;
+
+                    if (part == "/right_lower_arm") return RIGHT_LOWER_ARM;
+
+                    if (part == "/head") return HEAD;
+
+                    return -1;
+                }
+
 				double getBalancing(Vec3 &Force)
 				{
 					static Vec3 C1(0.055 + 0.074, 0.110, 0.0);
@@ -110,6 +130,7 @@ namespace icub
 				//const Matrix& getWristRJeq(){ return mWristR->Jeq; }
 
 			protected:
+
 				enum
 				{
 					TORSO_TRIFID_0,
@@ -144,6 +165,15 @@ namespace icub
 				};
 
 				enum{ BASE, TORSO, LEFT_UPPER_ARM, LEFT_LOWER_ARM, LEFT_HAND, RIGHT_UPPER_ARM, RIGHT_LOWER_ARM, RIGHT_HAND, HEAD, NPARTS };
+
+                int lut_torso[4];
+                int lut_left_upper_arm[4];
+                int lut_left_lower_arm[4];
+                int lut_right_upper_arm[4];
+                int lut_right_lower_arm[4];
+                int lut_head[2];
+
+                int *lut[NPARTS];
 			};
 		}
 	}
