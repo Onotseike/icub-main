@@ -28,6 +28,8 @@ public:
 	SafeMotionControl() : RateThread(int(PERIOD*1000.0))
 	{
         robotModel = new icub::robot_model::r1::R1Model();
+
+        lut = robotModel->getJointMap();
 	}
 
     virtual ~SafeMotionControl()
@@ -109,12 +111,12 @@ public:
         }
 	}
 
-    bool checkVelocity(int part, double v, int j)
+    bool checkVelocity(int part, double *v)
     {
         return true;
     }
 
-	bool checkVelocity(int part, double *v)
+    bool checkVelocity(int part, int njoints, int *joints, double *v)
 	{
 		static Matrix dQ, dD;
 
@@ -165,23 +167,25 @@ public:
 		return false;
 	}
 
-    bool checkPosition(int part, double p, int j)
+    bool checkPosition(int part, double *p)
     {
         return true;
     }
 
-	bool checkPosition(int part, double *p)
+	bool checkPosition(int part, int njoints, int *joints, double *p)
 	{
-		static Matrix dQ, dD;
-
         getPos(mQ);
 
         robotModel->setPose(mQ);
         robotModel->calcInterference(mD);
 
-        dQ.resize(mQ.R);
+        /////////////////////////////////
 
-        for (int i = 0; i < mQ.R; ++i) dQ(i) = p[i];
+        static Matrix dQ, dD;
+
+        dQ = mQ;
+
+        for (int j = 0; j < njoints; ++j) dQ(joints[j]) = p[j];
 
 		robotModel->setPose(dQ);
 		robotModel->calcInterference(dD);
@@ -198,11 +202,11 @@ public:
 
 		if (safe) return true;
 
-		for (int j = 0; j < NDOF; ++j)
+		for (int j = 0; j < njoints; ++j)
 		{
 			dQ = mQ;
 
-			dQ(j) = p[j];
+			dQ(joints[j]) = p[j];
 
 			robotModel->setPose(dQ);
 
@@ -212,7 +216,7 @@ public:
 			{
 				if (dD(i) <= MARGIN && dD(i) <= mD(i))
 				{
-					p[j] = mQ(j);
+					p[j] = mQ(joints[j]);
 
 					break;
 				}
@@ -320,6 +324,8 @@ protected:
 	int NDOF;
 
 	icub::robot_model::RobotModel* robotModel;
+
+    int **lut;
 
 
     virtual void getPos(Matrix& q)

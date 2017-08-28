@@ -98,6 +98,8 @@ cDownloader::cDownloader(bool verbose)
 void cDownloader::set_verbose(bool verbose)
 {
     _verbose = verbose;
+
+    return true;
 }
 
 

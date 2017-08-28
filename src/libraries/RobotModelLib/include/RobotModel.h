@@ -49,7 +49,19 @@ namespace icub
 				for (unsigned int i = 0; i < interference.size(); ++i) delete interference[i];
 
 				for (unsigned int c = 0; c < (int)cover_list.size(); ++c) delete cover_list[c];
+
+                for (int i = 0; i < nwraps; ++i)
+                {
+                    delete [] lut[i];
+                }
+
+                delete [] lut;
 			}
+
+            int** getJointMap()
+            {
+                return lut;
+            }
 
 			virtual int getNDOF() = 0;
 
@@ -177,6 +189,9 @@ namespace icub
 			Matrix Jself;
 
 			Matrix Jhand[2];
+
+            int **lut;
+            int nwraps;
 		};
 
 	}

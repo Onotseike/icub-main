@@ -42,48 +42,54 @@
 
 using namespace icub::robot_model::r1;
 
+#define UNUSED -1
+
 R1Model::R1Model() : RobotModel()
 {
+    nwraps = NWRAPS;
+
+    lut = new int*[NWRAPS];
+
+    for (int i = 0; i < NWRAPS; ++i)
+    {
+        lut[i] = new int[8];
+
+        for (int j = 0; j < 8; ++j)
+        {
+            lut[i][j] = UNUSED;
+        }
+    }
+
     int j = 0;
-    
-    lut_torso[0] = j++;
-    lut_torso[1] = j++;
-    lut_torso[2] = j++;
-    lut_torso[3] = j++;
 
-    lut_left_upper_arm[0] = j++;
-    lut_left_upper_arm[1] = j++;
-    lut_left_upper_arm[2] = j++;
-    lut_left_upper_arm[3] = j++;
+    lut[WTORSO_TRIFID][0] = 0;
+    lut[WTORSO_TRIFID][1] = 1;
+    lut[WTORSO_TRIFID][2] = 2;
 
-    lut_left_lower_arm[0] = j++;
-    lut_left_lower_arm[1] = j++;
-    lut_left_lower_arm[2] = j++;
-    lut_left_lower_arm[3] = j++;
+    lut[WTORSO][3] = 3;
 
-    lut_right_upper_arm[0] = j++;
-    lut_right_upper_arm[1] = j++;
-    lut_right_upper_arm[2] = j++;
-    lut_right_upper_arm[3] = j++;
+    lut[WLEFT_ARM][0] = 4;
+    lut[WLEFT_ARM][1] = 5;
+    lut[WLEFT_ARM][2] = 6;
+    lut[WLEFT_ARM][3] = 7;
+    lut[WLEFT_ARM][4] = 8;
 
-    lut_right_lower_arm[0] = j++;
-    lut_right_lower_arm[1] = j++;
-    lut_right_lower_arm[2] = j++;
-    lut_right_lower_arm[3] = j++;
+    lut[WLEFT_TRIFID][0] = 9;
+    lut[WLEFT_TRIFID][1] = 10;
+    lut[WLEFT_TRIFID][2] = 11;
 
-    lut_head[0] = j++;
-    lut_head[1] = j++;
+    lut[WRIGHT_ARM][0] = 12;
+    lut[WRIGHT_ARM][1] = 13;
+    lut[WRIGHT_ARM][2] = 14;
+    lut[WRIGHT_ARM][3] = 15;
+    lut[WRIGHT_ARM][4] = 16;
 
-    lut[BASE] = NULL;
-    lut[TORSO] = lut_torso;
-    lut[LEFT_UPPER_ARM] = lut_left_upper_arm;
-    lut[LEFT_LOWER_ARM] = lut_left_lower_arm;
-    lut[LEFT_HAND] = NULL;
-    lut[RIGHT_UPPER_ARM] = lut_right_upper_arm;
-    lut[RIGHT_LOWER_ARM] = lut_right_lower_arm;
-    lut[RIGHT_HAND] = NULL;
-    lut[HEAD] = lut_head;
+    lut[WRIGHT_TRIFID][1] = 17;
+    lut[WRIGHT_TRIFID][2] = 18;
+    lut[WRIGHT_TRIFID][3] = 19;
 
+    lut[HEAD][0] = 20;
+    lut[HEAD][1] = 21;
 
 	double TORSO_EXC = 0.75*TORSO_RADIUS*tan(DEG2RAD*TORSO_MAX_TILT);
 	double ARM_EXC = 0.75*ARM_RADIUS*tan(DEG2RAD*WRIST_MAX_TILT);
