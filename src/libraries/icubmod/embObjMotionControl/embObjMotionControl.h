@@ -267,13 +267,13 @@ private:
 
      double  *_encodersStamp;                    /** keep information about acquisition time for encoders read */
     uint8_t *_jointEncoderType;                 /** joint encoder type*/
-    uint8_t *_jointNumOfNoiseBits;              /** Num of error bits passable for joint encoder */
+    double *_jointTollerance;              /** Num of error bits passable for joint encoder */
     int    *_jointEncoderRes;                   /** joint encoder resolution */
     int    *_rotorEncoderRes;                   /** rotor encoder resolution */
-    uint8_t *_rotorNumOfNoiseBits;              /** Num of error bits passable for joint encoder */
+    double *_rotorTollerance;;              /** Num of error bits passable for joint encoder */
     uint8_t *_rotorEncoderType;                  /** rotor encoder type*/
-    double *_gearbox;                           /** the gearbox ratio */
-    double *_gearboxE2J;                        /** the gearbox ratio */
+    double *_gearbox_M2J;                           /** the gearbox ratio */
+    double *_gearbox_E2J;                        /** the gearbox ratio */
 
     eomc_twofocSpecificInfo *_twofocinfo;
 

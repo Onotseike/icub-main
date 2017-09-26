@@ -376,8 +376,8 @@ bool embObjMotionControl::alloc(int nj)
     _jointNumOfNoiseBits = allocAndCheck<uint8_t>(nj);
     _rotorNumOfNoiseBits = allocAndCheck<uint8_t>(nj);
     _rotorEncoderRes = allocAndCheck<int>(nj);
-    _gearbox = allocAndCheck<double>(nj);
-    _gearboxE2J = allocAndCheck<double>(nj);
+    _gearbox_M2J = allocAndCheck<double>(nj);
+    _gearbox_E2J = allocAndCheck<double>(nj);
     _twofocinfo=allocAndCheck<eomc_twofocSpecificInfo>(nj);
     _ppids= new eomcParser_pidInfo[nj];
     _vpids= new eomcParser_pidInfo[nj];
@@ -423,8 +423,8 @@ bool embObjMotionControl::dealloc()
     checkAndDestroy(_rotorEncoderType);
     checkAndDestroy(_jointNumOfNoiseBits);
     checkAndDestroy(_rotorNumOfNoiseBits);
-    checkAndDestroy(_gearbox);
-    checkAndDestroy(_gearboxE2J);
+    checkAndDestroy(_gearbox_M2J);
+    checkAndDestroy(_gearbox_E2J);
     checkAndDestroy(_impedance_limits);
     checkAndDestroy(checking_motiondone);
     checkAndDestroy(_ref_command_positions);
@@ -493,10 +493,10 @@ embObjMotionControl::embObjMotionControl() :
     _impedance_params(0),
     _axesInfo(0)
 {
-    _gearbox       = 0;
-    _gearboxE2J      = 0;
+    _gearbox_M2J  = 0;
+    _gearbox_E2J  = 0;
     opened        = 0;
-    _ppids         = NULL;
+    _ppids        = NULL;
     _vpids        = NULL;
     _tpids        = NULL;
     _cpids        = NULL;
@@ -1065,7 +1065,7 @@ bool embObjMotionControl::fromConfig_Step2(yarp::os::Searchable &config)
 
         //VALE: i have to parse GeneralMecGroup after parsing jointsetcfg, because inside generalmec group there is useMotorSpeedFbk that needs jointset info.
 
-        if(!_mcparser->parseGearboxValues(config, _gearbox, _gearboxE2J))
+        if(!_mcparser->parseGearboxValues(config, _gearbox_M2J, _gearbox_E2J))
             return false;
 
         // useMotorSpeedFbk
@@ -1339,27 +1339,27 @@ bool embObjMotionControl::fromConfig_readServiceCfg(yarp::os::Searchable &config
         {
             _jointEncoderRes[i]  = 1;
             _jointEncoderType[i] = eomc_enc_none;
-            _jointNumOfNoiseBits[i] = 0;
+            _jointTollerance[i]  = 0;
         }
         else
         {
             _jointEncoderRes[i]  = jointEncoder_ptr->resolution;
             _jointEncoderType[i] = jointEncoder_ptr->desc.type;
-            _jointNumOfNoiseBits[i] = jointEncoder_ptr->numofnoisebits;
+            _jointTollerance[i]  = jointEncoder_ptr->tollerance;
         }
 
 
         if(NULL == motorEncoder_ptr)
         {
-            _rotorEncoderRes[i]  = 1;
+            _rotorEncoderRes[i] = 1;
             _rotorEncoderRes[i] = eomc_enc_none;
-            _rotorNumOfNoiseBits[i] = 0;
+            _rotorTollernace[i] = 0;
         }
         else
         {
             _rotorEncoderRes[i]  = motorEncoder_ptr->resolution;
             _rotorEncoderType[i] = motorEncoder_ptr->desc.type;
-            _rotorNumOfNoiseBits[i] = motorEncoder_ptr->numofnoisebits;
+            _rotorTollerance[i]  = motorEncoder_ptr->tollerance;
         }
 
 
@@ -1558,6 +1558,8 @@ bool embObjMotionControl::init()
         jconfig.motor_params.ktau_value = (float) _measureConverter->convertTrqMotorKtaufParam_MetricToMachineUnits(fisico, _tpids[logico].ktau);
         jconfig.motor_params.ktau_scale = 0;
 
+        jconfig.gearbox_E2J = _gearbox_E2J[logico];
+
         jconfig.tcfiltertype=_tpids[logico].filterType;
 
 
@@ -1606,8 +1608,7 @@ bool embObjMotionControl::init()
         motor_cfg.currentLimits.nominalCurrent = _currentLimits[logico].nominalCurrent;
         motor_cfg.currentLimits.overloadCurrent = _currentLimits[logico].overloadCurrent;
         motor_cfg.currentLimits.peakCurrent = _currentLimits[logico].peakCurrent;
-        motor_cfg.gearboxratio = _gearbox[logico];
-        motor_cfg.gearboxratio2 = _gearboxE2J[logico];
+        motor_cfg.gearbox_M2J = _gearbox_M2J[logico];
         motor_cfg.rotorEncoderResolution = _rotorEncoderRes[logico];
         motor_cfg.rotEncNumOfNoiseBits = _rotorNumOfNoiseBits[logico];
         motor_cfg.hasHallSensor = _twofocinfo[logico].hasHallSensor;
@@ -4022,7 +4023,7 @@ bool embObjMotionControl::setRemoteVariableRaw(yarp::os::ConstString key, const 
     }
     else if (key == "gearbox")
     {
-        for (int i = 0; i < _njoints; i++) _gearbox[i] = val.get(i).asDouble();
+        for (int i = 0; i < _njoints; i++) _gearbox_M2J[i] = val.get(i).asDouble();
         return true;
     }
     else if (key == "PWMLimit")
