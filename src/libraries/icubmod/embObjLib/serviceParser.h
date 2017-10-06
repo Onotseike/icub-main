@@ -145,7 +145,7 @@ typedef struct
 {
     eOmc_encoder_descriptor_t       desc;
     int32_t                         resolution;
-    double                          tollerance;
+    double                          tolerance;
 } servMC_encoder_t;
 
 
