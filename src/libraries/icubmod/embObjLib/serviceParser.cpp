@@ -2155,10 +2155,10 @@ bool ServiceParser::check_motion(Searchable &config)
             yError() << "ServiceParser::check_motion() cannot find PROPERTIES.JOINTMAPPING.ENCODER1.resolution";
             return false;
         }
-        Bottle b_PROPERTIES_JOINTMAPPING_ENCODER1_tolerance = Bottle(b_PROPERTIES_JOINTMAPPING_ENCODER1.findGroup("numofnoisebits"));
+        Bottle b_PROPERTIES_JOINTMAPPING_ENCODER1_tolerance = Bottle(b_PROPERTIES_JOINTMAPPING_ENCODER1.findGroup("tolerance"));
         if(b_PROPERTIES_JOINTMAPPING_ENCODER1_tolerance.isNull())
         {
-            yError() << "ServiceParser::check_motion() cannot find PROPERTIES.JOINTMAPPING.ENCODER1.numofnoisebits";
+            yError() << "ServiceParser::check_motion() cannot find PROPERTIES.JOINTMAPPING.ENCODER1.tolerance";
             return false;
         }
 
@@ -2188,10 +2188,10 @@ bool ServiceParser::check_motion(Searchable &config)
             yError() << "ServiceParser::check_motion() cannot find PROPERTIES.JOINTMAPPING.ENCODER2.resolution";
             return false;
         }
-        Bottle b_PROPERTIES_JOINTMAPPING_ENCODER2_tolerance = Bottle(b_PROPERTIES_JOINTMAPPING_ENCODER2.findGroup("numofnoisebits"));
+        Bottle b_PROPERTIES_JOINTMAPPING_ENCODER2_tolerance = Bottle(b_PROPERTIES_JOINTMAPPING_ENCODER2.findGroup("tolerance"));
         if(b_PROPERTIES_JOINTMAPPING_ENCODER2_tolerance.isNull())
         {
-            yError() << "ServiceParser::check_motion() cannot find PROPERTIES.JOINTMAPPING.ENCODER2.numofnoisebits";
+            yError() << "ServiceParser::check_motion() cannot find PROPERTIES.JOINTMAPPING.ENCODER2.tolerance";
             return false;
         }
         // now the size of the vectors must all be equal
