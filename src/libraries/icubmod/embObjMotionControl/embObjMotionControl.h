@@ -399,6 +399,12 @@ private:
     bool iNeedCouplingsInfo(void); //the device needs coupling info if it manages joints controlled by 2foc and mc4plus.
     bool iMange2focBoards(void);
 
+    bool getJointConfiguration(int joint, eOmc_joint_config_t *jntCfg_ptr);
+    bool getMotorConfiguration(int axis, eOmc_motor_config_t *motCfg_ptr);
+    bool getGerabox_E2J(int joint, double &gearbox_E2J);
+    bool getJointEncTolerance(int joint, double &jEncTolerance);
+    bool getMotorEncTolerance(int axis, double &mEncTolerance);
+
     // saturation check and rounding for 16 bit unsigned integer
     int U_16(double x) const
     {

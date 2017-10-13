@@ -3846,9 +3846,14 @@ bool embObjMotionControl::getRemoteVariableRaw(yarp::os::ConstString key, yarp::
         Bottle& r = val.addList(); for (int i = 0; i<_njoints; i++) { double tmp = 0; getJointEncoderResolutionRaw(i, tmp);  r.addDouble(tmp); }
         return true;
     }
-    else if (key == "gearbox")
+    else if (key == "gearbox_M2J")
     {
         Bottle& r = val.addList(); for (int i = 0; i<_njoints; i++) { double tmp=0; getGearboxRatioRaw(i, &tmp);  r.addDouble(tmp); }
+        return true;
+    }
+    else if (key == "gearbox_E2J")
+    {
+        Bottle& r = val.addList(); for (int i = 0; i<_njoints; i++) { double tmp=0; getGerabox_E2J(i, &tmp);  r.addDouble(tmp); }
         return true;
     }
     else if (key == "hasHallSensor")
@@ -3998,6 +4003,18 @@ bool embObjMotionControl::getRemoteVariableRaw(yarp::os::ConstString key, yarp::
         Bottle& r = val.addList(); for (int i = 0; i<_njoints; i++) { double tmp = 0; getLimitsRaw(i, &tmp1, &tmp2);  r.addDouble(tmp1); }
         return true;
     }
+    else if (key == "jointEncTolerance")
+    {
+        double tmp1;
+        Bottle& r = val.addList(); for (int i = 0; i<_njoints; i++) { double tmp = 0; getJointEncTolerance(i, &tmp1);  r.addDouble(tmp1); }
+        return true;
+    }
+    else if (key == "motorEncTolerance")
+    {
+        double tmp1;
+        Bottle& r = val.addList(); for (int i = 0; i<_njoints; i++) { double tmp = 0; getMotorEncTolerance(i, &tmp1);  r.addDouble(tmp1); }
+        return true;
+    }
     yWarning("getRemoteVariable(): Unknown variable %s", key.c_str());
     return false;
 }
@@ -4063,6 +4080,7 @@ bool embObjMotionControl::getRemoteVariablesListRaw(yarp::os::Bottle* listOfKeys
     listOfKeys->addString("kinematic_mj");
     listOfKeys->addString("encoders");
     listOfKeys->addString("gearbox_M2J");
+    listOfKeys->addString("gearbox_E2J");
     listOfKeys->addString("hasHallSensor");
     listOfKeys->addString("hasTempSensor");
     listOfKeys->addString("hasRotorEncoder");
@@ -4088,6 +4106,8 @@ bool embObjMotionControl::getRemoteVariablesListRaw(yarp::os::Bottle* listOfKeys
     listOfKeys->addString("rotorMin");
     listOfKeys->addString("jointMax");
     listOfKeys->addString("jointMin");
+    listOfKeys->addString("jointEncTolerance");
+    listOfKeys->addString("motorEncTolerance");
     return true;
 }
 
@@ -5553,5 +5573,68 @@ bool embObjMotionControl::helper_getCurPidRaw(int j, Pid *pid)
     return true;
 }
 
+
+bool embObjMotionControl::getJointConfiguration(int joint, eOmc_joint_config_t *jntCfg_ptr)
+{
+    uint32_t protoid = eoprot_ID_get(eoprot_endpoint_motioncontrol, eoprot_entity_mc_joint, joint, eoprot_tag_mc_joint_config);
+    uint16_t size;
+    if(!askRemoteValue(protoid, (void*)jntCfg_ptr, uint16_t& size))
+    {
+        yError ("Failure of askRemoteValue() inside embObjMotionControl::getJointConfiguration(axis=%d) for BOARD %s IP %s", joint, res->getName(), res->getIPv4string());
+        return false;
+    }
+    return true;
+}
+
+bool embObjMotionControl::getMotorConfiguration(int axis, eOmc_motor_config_t *motCfg_ptr)
+{
+    uint32_t protoid = eoprot_ID_get(eoprot_endpoint_motioncontrol, eoprot_entity_mc_motor, axis, eoprot_tag_mc_motor_config);
+    uint16_t size;
+    if(!askRemoteValue(protoid, (void*)motCfg_ptr, uint16_t& size))
+    {
+        yError ("Failure of askRemoteValue() inside embObjMotionControl::getMotorConfiguration(axis=%d) for BOARD %s IP %s", axis, res->getName(), res->getIPv4string());
+        return false;
+    }
+    return true;
+}
+
+
+bool embObjMotionControl::getGerabox_E2J(int joint, double &gearbox_E2J)
+{
+    eOmc_joint_config_t jntCfg;
+
+    if(!getJointConfiguration(joint, &jntCfg))
+    {
+        yError ("Failure embObjMotionControl::getGerabox_E2J(axis=%d) for BOARD %s IP %s", axis, res->getName(), res->getIPv4string());
+        return false;
+    }
+    gearbox_E2J = jntCfg.gearbox_E2J;
+    return true;
+}
+
+bool embObjMotionControl::getJointEncTolerance(int joint, double &jEncTolerance)
+{
+    eOmc_joint_config_t jntCfg;
+
+    if(!getJointConfiguration(joint, &jntCfg))
+    {
+        yError ("Failure embObjMotionControl::getJointEncTolerance(axis=%d) for BOARD %s IP %s", axis, res->getName(), res->getIPv4string());
+        return false;
+    }
+    jEncTolerance = jntCfg.jntEncTolerance;
+    return true;
+}
+
+bool embObjMotionControl::getMotorEncTolerance(int axis, double &mEncTolerance)
+{
+    eOmc_motor_config_t motorCfg;
+    if(!getMotorConfiguration(axis, &motorCfg))
+    {
+        yError ("Failure embObjMotionControl::getMotorEncTolerance(axis=%d) for BOARD %s IP %s", axis, res->getName(), res->getIPv4string());
+        return false;
+    }
+    mEncTolerance = motorCfg.rotEncTolerance;
+    return true;
+}
 
 // eof
