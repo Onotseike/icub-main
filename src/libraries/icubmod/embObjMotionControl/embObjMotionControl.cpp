@@ -5578,7 +5578,7 @@ bool embObjMotionControl::getJointConfiguration(int joint, eOmc_joint_config_t *
 {
     uint32_t protoid = eoprot_ID_get(eoprot_endpoint_motioncontrol, eoprot_entity_mc_joint, joint, eoprot_tag_mc_joint_config);
     uint16_t size;
-    if(!askRemoteValue(protoid, (void*)jntCfg_ptr, uint16_t& size))
+    if(!askRemoteValue(protoid, (void*)jntCfg_ptr, size))
     {
         yError ("Failure of askRemoteValue() inside embObjMotionControl::getJointConfiguration(axis=%d) for BOARD %s IP %s", joint, res->getName(), res->getIPv4string());
         return false;
@@ -5590,7 +5590,7 @@ bool embObjMotionControl::getMotorConfiguration(int axis, eOmc_motor_config_t *m
 {
     uint32_t protoid = eoprot_ID_get(eoprot_endpoint_motioncontrol, eoprot_entity_mc_motor, axis, eoprot_tag_mc_motor_config);
     uint16_t size;
-    if(!askRemoteValue(protoid, (void*)motCfg_ptr, uint16_t& size))
+    if(!askRemoteValue(protoid, (void*)motCfg_ptr, size))
     {
         yError ("Failure of askRemoteValue() inside embObjMotionControl::getMotorConfiguration(axis=%d) for BOARD %s IP %s", axis, res->getName(), res->getIPv4string());
         return false;
@@ -5599,33 +5599,33 @@ bool embObjMotionControl::getMotorConfiguration(int axis, eOmc_motor_config_t *m
 }
 
 
-bool embObjMotionControl::getGerabox_E2J(int joint, double &gearbox_E2J)
+bool embObjMotionControl::getGerabox_E2J(int joint, double *gearbox_E2J_ptr)
 {
     eOmc_joint_config_t jntCfg;
 
     if(!getJointConfiguration(joint, &jntCfg))
     {
-        yError ("Failure embObjMotionControl::getGerabox_E2J(axis=%d) for BOARD %s IP %s", axis, res->getName(), res->getIPv4string());
+        yError ("Failure embObjMotionControl::getGerabox_E2J(axis=%d) for BOARD %s IP %s", joint, res->getName(), res->getIPv4string());
         return false;
     }
-    gearbox_E2J = jntCfg.gearbox_E2J;
+    *gearbox_E2J_ptr = jntCfg.gearbox_E2J;
     return true;
 }
 
-bool embObjMotionControl::getJointEncTolerance(int joint, double &jEncTolerance)
+bool embObjMotionControl::getJointEncTolerance(int joint, double *jEncTolerance_ptr)
 {
     eOmc_joint_config_t jntCfg;
 
     if(!getJointConfiguration(joint, &jntCfg))
     {
-        yError ("Failure embObjMotionControl::getJointEncTolerance(axis=%d) for BOARD %s IP %s", axis, res->getName(), res->getIPv4string());
+        yError ("Failure embObjMotionControl::getJointEncTolerance(axis=%d) for BOARD %s IP %s", joint, res->getName(), res->getIPv4string());
         return false;
     }
-    jEncTolerance = jntCfg.jntEncTolerance;
+    *jEncTolerance_ptr = jntCfg.jntEncTolerance;
     return true;
 }
 
-bool embObjMotionControl::getMotorEncTolerance(int axis, double &mEncTolerance)
+bool embObjMotionControl::getMotorEncTolerance(int axis, double *mEncTolerance_ptr)
 {
     eOmc_motor_config_t motorCfg;
     if(!getMotorConfiguration(axis, &motorCfg))
@@ -5633,7 +5633,7 @@ bool embObjMotionControl::getMotorEncTolerance(int axis, double &mEncTolerance)
         yError ("Failure embObjMotionControl::getMotorEncTolerance(axis=%d) for BOARD %s IP %s", axis, res->getName(), res->getIPv4string());
         return false;
     }
-    mEncTolerance = motorCfg.rotEncTolerance;
+    *mEncTolerance_ptr = motorCfg.rotEncTolerance;
     return true;
 }
 

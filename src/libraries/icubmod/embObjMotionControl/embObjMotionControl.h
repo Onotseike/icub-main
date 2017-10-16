@@ -401,9 +401,9 @@ private:
 
     bool getJointConfiguration(int joint, eOmc_joint_config_t *jntCfg_ptr);
     bool getMotorConfiguration(int axis, eOmc_motor_config_t *motCfg_ptr);
-    bool getGerabox_E2J(int joint, double &gearbox_E2J);
-    bool getJointEncTolerance(int joint, double &jEncTolerance);
-    bool getMotorEncTolerance(int axis, double &mEncTolerance);
+    bool getGerabox_E2J(int joint, double *gearbox_E2J_ptr);
+    bool getJointEncTolerance(int joint, double *jEncTolerance_ptr);
+    bool getMotorEncTolerance(int axis, double *mEncTolerance_ptr);
 
     // saturation check and rounding for 16 bit unsigned integer
     int U_16(double x) const
