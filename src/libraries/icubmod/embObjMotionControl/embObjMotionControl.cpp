@@ -1621,6 +1621,7 @@ bool embObjMotionControl::init()
         motor_cfg.hasTempSensor = _twofocinfo[logico].hasTempSensor;
         motor_cfg.hasRotorEncoderIndex = _twofocinfo[logico].hasRotorEncoderIndex;
         motor_cfg.hasSpeedEncoder = _twofocinfo[logico].hasSpeedEncoder;
+        motor_cfg.verbose = _twofocinfo[logico].verbose;
         motor_cfg.motorPoles = _twofocinfo[logico].motorPoles;
         motor_cfg.rotorIndexOffset = _twofocinfo[logico].rotorIndexOffset;
         motor_cfg.rotorEncoderType = _rotorEncoderType[logico];
@@ -4038,16 +4039,16 @@ bool embObjMotionControl::setRemoteVariableRaw(yarp::os::ConstString key, const 
         yWarning("setRemoteVariable(): Impossible to set kinematic_mj parameter at runtime.");
         return false;
     }
-    else if (key == "rotor")
-    {
-        for (int i = 0; i < _njoints; i++) _rotorEncoderRes[i] = val.get(i).asInt();
-        return true;
-    }
-    else if (key == "gearbox")
-    {
-        for (int i = 0; i < _njoints; i++) _gearbox_M2J[i] = val.get(i).asDouble();
-        return true;
-    }
+//     else if (key == "rotor")
+//     {
+//         for (int i = 0; i < _njoints; i++) _rotorEncoderRes[i] = val.get(i).asInt();//this operation has none effect on motor controlelr, so i remove it
+//         return true;
+//     }
+//     else if (key == "gearbox_M2J")
+//     {
+//         for (int i = 0; i < _njoints; i++) _gearbox_M2J[i] = val.get(i).asDouble();//this operation has none effect on motor controlelr, so i remove it
+//         return true;
+//     }
     else if (key == "PWMLimit")
     {
         for (int i = 0; i < _njoints; i++) setPWMLimitRaw(i, val.get(i).asDouble());
