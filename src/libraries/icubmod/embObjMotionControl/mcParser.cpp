@@ -947,7 +947,7 @@ bool mcParser::parse2FocGroup(yarp::os::Searchable &config, eomc_twofocSpecificI
                 twofocinfo[i - 1].rotorIndexOffset = xtmp.get(i).asInt();
                 if (twofocinfo[i - 1].rotorIndexOffset <0 ||  twofocinfo[i - 1].rotorIndexOffset >359)
                 {
-                    yError() << "In " << _boardname << "joint " << i-1 << ": rotorIndexOffset should be in [0,259] range." ;
+                    yError() << "In " << _boardname << "joint " << i-1 << ": rotorIndexOffset should be in [0,359] range." ;
                     return false;
                 }
             }
