@@ -75,6 +75,11 @@ using namespace yarp::os;
 using namespace yarp::dev;
 using namespace std;
 
+#define DBGPRINTS4SCHEDYIELD
+#ifdef DBGPRINTS4SCHEDYIELD
+#define DBGPRINTS4SCHEDYIELD_PERIOD 60000 //ms
+#endif
+
 
 // -- class EthBoards
 // -- it collects all the ETH boards managed by ethManager.
@@ -286,6 +291,10 @@ private:
     uint8_t                       *p_sendData;
     TheEthManager                 *ethManager;
     ACE_SOCK_Dgram                *send_socket;
+    #ifdef DBGPRINTS4SCHEDYIELD
+    int32_t                        dbgPrintIterationsNum;
+    #endif
+
     void run();
 
 
@@ -313,6 +322,9 @@ private:
     ACE_SOCK_Dgram                  *recv_socket;
     TheEthManager                   *ethManager;
     double                          statPrintInterval;
+    #ifdef DBGPRINTS4SCHEDYIELD
+    int32_t                         dbgPrintIterationsNum;
+    #endif
 
 
 public:

@@ -1364,6 +1364,11 @@ EthSender::EthSender(int txrate) : RateThread(txrate)
     rateofthread = txrate;
     yDebug() << "EthSender is a RateThread with txrate =" << rateofthread << "ms";
     yTrace();
+    #ifdef DBGPRINTS4SCHEDYIELD
+    //try to aproximate the number of iteration before prints debug statistc of this thred
+    dbgPrintIterationsNum  = DBGPRINTS4SCHEDYIELD_PERIOD/txrate;
+    yDebug()<< "DBG_YIELD"<< "I'm the sender: configured print period is "<< DBGPRINTS4SCHEDYIELD_PERIOD << "I'll print every " << dbgPrintIterationsNum << " number of iterations";
+    #endif
 }
 
 EthSender::~EthSender()
@@ -1406,6 +1411,21 @@ void EthSender::run()
     // for tx we must protect the EthResource not being changed. they can be changed by a device such as
     // embObjMotionControl etc which adds or releases its resources.
     ethManager->Transmission();
+#ifdef DBGPRINTS4SCHEDYIELD
+    uint32_t iterations =  getIterations ();
+    if(iterations >= dbgPrintIterationsNum)
+    {
+        double av, std;
+        getEstPeriod (av, std);
+        yDebug()<< "DBG_YIELD"<< "I'm the sender: (print period is " << DBGPRINTS4SCHEDYIELD_PERIOD << ")";
+        yDebug()<< "DBG_YIELD"<< "\t - my rete is "<< rateofthread << " ms" ;
+        yDebug()<< "DBG_YIELD"<< "\t - my estPeriod is avg= " << av <<" ms , std= " <<std <<" ms";
+        getEstUsed (av, std);
+        yDebug()<< "DBG_YIELD"<< "\t - my EstUsed is avg= " << av <<" ms , std= " <<std <<" ms";
+        yDebug()<< "DBG_YIELD"<< "\t - I performed " << iterations << " iterations";
+        resetStat();
+    }
+#endif
 }
 
 
@@ -1426,6 +1446,13 @@ EthReceiver::EthReceiver(int raterx): RateThread(raterx)
     {
         statPrintInterval = 0.0;
     }
+    
+    #ifdef DBGPRINTS4SCHEDYIELD
+    //try to aproximate the number of iteration before prints debug statistc of this thred
+    dbgPrintIterationsNum  = DBGPRINTS4SCHEDYIELD_PERIOD/raterx;
+    yDebug()<< "DBG_YIELD"<< "I'm the receiver: configured print period is "<< DBGPRINTS4SCHEDYIELD_PERIOD << "I'll print every " << dbgPrintIterationsNum << " number of iterations";
+    #endif
+    
 }
 
 void EthReceiver::onStop()
@@ -1548,6 +1575,22 @@ void EthReceiver::run()
 
     // execute the check on presence of all eth boards.
     ethManager->CheckPresence();
+    
+    #ifdef DBGPRINTS4SCHEDYIELD
+    uint32_t iterations =  getIterations ();
+    if(iterations >= dbgPrintIterationsNum)
+    {
+        double av, std;
+        getEstPeriod (av, std);
+        yDebug()<< "DBG_YIELD"<< "I'm the receiver: (print period is " << DBGPRINTS4SCHEDYIELD_PERIOD << ")";
+        yDebug()<< "DBG_YIELD"<< "\t - my rete is "<< rateofthread << " ms" ;
+        yDebug()<< "DBG_YIELD"<< "\t - my estPeriod is avg= " << av <<" ms , std= " <<std <<" ms";
+        getEstUsed (av, std);
+        yDebug()<< "DBG_YIELD"<< "\t - my EstUsed is avg= " << av <<" ms , std= " <<std <<" ms";
+        yDebug()<< "DBG_YIELD"<< "\t - I performed " << iterations << " iterations";
+        resetStat();
+    }
+    #endif
 }
 
 
