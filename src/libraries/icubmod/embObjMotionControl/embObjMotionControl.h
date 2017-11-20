@@ -274,6 +274,7 @@ private:
     uint8_t *_rotorEncoderType;                  /** rotor encoder type*/
     double *_gearbox_M2J;                           /** the gearbox ratio */
     double *_gearbox_E2J;                        /** the gearbox ratio */
+    double *_deadzone;
 
     eomc_twofocSpecificInfo *_twofocinfo;
 

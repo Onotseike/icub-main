@@ -383,6 +383,7 @@ bool embObjMotionControl::alloc(int nj)
     _rotorEncoderRes = allocAndCheck<int>(nj);
     _gearbox_M2J = allocAndCheck<double>(nj);
     _gearbox_E2J = allocAndCheck<double>(nj);
+    _deadzone = allocAndCheck<double>(nj);
     _twofocinfo=allocAndCheck<eomc_twofocSpecificInfo>(nj);
     _ppids= new eomcParser_pidInfo[nj];
     _vpids= new eomcParser_pidInfo[nj];
@@ -430,6 +431,7 @@ bool embObjMotionControl::dealloc()
     checkAndDestroy(_rotorEncoderTolerance);
     checkAndDestroy(_gearbox_M2J);
     checkAndDestroy(_gearbox_E2J);
+    checkAndDestroy(_deadzone);
     checkAndDestroy(_impedance_limits);
     checkAndDestroy(checking_motiondone);
     checkAndDestroy(_ref_command_positions);
@@ -500,6 +502,7 @@ embObjMotionControl::embObjMotionControl() :
 {
     _gearbox_M2J  = 0;
     _gearbox_E2J  = 0;
+    _deadzone     = 0;
     opened        = 0;
     _ppids        = NULL;
     _vpids        = NULL;
@@ -1092,6 +1095,9 @@ bool embObjMotionControl::fromConfig_Step2(yarp::os::Searchable &config)
             }
             delete[] useMotorSpeedFbk;
         }
+        
+        if(!_mcparser->parseDeadzoneValue(config, _deadzone))
+            return false;
     }
 
 
@@ -1564,6 +1570,8 @@ bool embObjMotionControl::init()
         jconfig.motor_params.ktau_scale = 0;
 
         jconfig.gearbox_E2J = _gearbox_E2J[logico];
+        
+        jconfig.deadzone = _deadzone[logico];
 
         jconfig.tcfiltertype=_tpids[logico].filterType;
 

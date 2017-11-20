@@ -1649,6 +1649,31 @@ bool mcParser::parseGearboxValues(yarp::os::Searchable &config, double gearbox_M
     return true;
 }
 
+bool mcParser::parseDeadzoneValue(yarp::os::Searchable &config, double deadzone[])
+{
+    Bottle general = config.findGroup("GENERAL");
+    if (general.isNull())
+    {
+        yError() << "embObjMC BOARD " << _boardname << "Missing General group" ;
+        return false;
+    }
+    
+    Bottle xtmp;
+    int i;
+    
+    // Gearbox_M2J
+    if (!extractGroup(general, xtmp, "DeadZone", "The deadzone of joint", _njoints))
+    {
+        return false;
+    }
+    
+    for (i = 1; i < xtmp.size(); i++)
+    {
+        deadzone[i-1] = xtmp.get(i).asDouble();
+    }
+    
+    return true;
+}
 
 
 bool mcParser::parseMechanicalsFlags(yarp::os::Searchable &config, int useMotorSpeedFbk[])
