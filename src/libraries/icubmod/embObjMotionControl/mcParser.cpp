@@ -1649,7 +1649,7 @@ bool mcParser::parseGearboxValues(yarp::os::Searchable &config, double gearbox_M
     return true;
 }
 
-bool mcParser::parseDeadzoneValue(yarp::os::Searchable &config, double deadzone[])
+bool mcParser::parseDeadzoneValue(yarp::os::Searchable &config, double deadzone[], bool *found)
 {
     Bottle general = config.findGroup("GENERAL");
     if (general.isNull())
@@ -1661,15 +1661,17 @@ bool mcParser::parseDeadzoneValue(yarp::os::Searchable &config, double deadzone[
     Bottle xtmp;
     int i;
     
-    // Gearbox_M2J
+    // DeadZone
     if (!extractGroup(general, xtmp, "DeadZone", "The deadzone of joint", _njoints))
     {
-        return false;
+        yWarning() << "embObjMC BOARD " << _boardname << "Missing DeadZone parameter. I'll use default value. (see documentation for more datails)";
+        *found = false;
     }
     
     for (i = 1; i < xtmp.size(); i++)
     {
         deadzone[i-1] = xtmp.get(i).asDouble();
+        *found = true;
     }
     
     return true;

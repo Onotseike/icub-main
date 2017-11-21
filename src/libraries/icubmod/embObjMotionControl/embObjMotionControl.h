@@ -405,6 +405,7 @@ private:
     bool getGerabox_E2J(int joint, double *gearbox_E2J_ptr);
     bool getJointEncTolerance(int joint, double *jEncTolerance_ptr);
     bool getMotorEncTolerance(int axis, double *mEncTolerance_ptr);
+    void updateDeadZoneWithDefaultValues(void);
 
     // saturation check and rounding for 16 bit unsigned integer
     int U_16(double x) const

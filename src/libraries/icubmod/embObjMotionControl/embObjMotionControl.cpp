@@ -1095,9 +1095,13 @@ bool embObjMotionControl::fromConfig_Step2(yarp::os::Searchable &config)
             }
             delete[] useMotorSpeedFbk;
         }
-        
-        if(!_mcparser->parseDeadzoneValue(config, _deadzone))
+        bool deadzoneIsAvailable;
+        if(!_mcparser->parseDeadzoneValue(config, _deadzone, &deadzoneIsAvailable))
             return false;
+        if(!deadzoneIsAvailable) // if parametr is not writte in configuration files then use default values
+        {
+            updateDeadZoneWithDefaultValues();
+        }
     }
 
 
@@ -1318,7 +1322,31 @@ bool embObjMotionControl::isVelocityControlEnabled(int joint)
 }
 
 
-
+void embObjMotionControl::updateDeadZoneWithDefaultValues(void)
+{
+    for(int i=0; i<_njoints; i++)
+    {
+        switch (_jointEncoderType[i])
+        {
+            case eomc_enc_aea:
+                _deadzone[i] = 0.0494;
+                break;
+            case eomc_enc_amo:
+                _deadzone[i] = 0.0055;
+                break;
+            case eomc_enc_roie:
+            case eomc_enc_absanalog:
+            case eomc_enc_mais:
+            case eomc_enc_qenc:
+            case eomc_enc_hallmotor:
+            case eomc_enc_spichainof2:
+            case eomc_enc_spichainof3:
+            default:
+                _deadzone[i] = 0.0;
+            
+        }
+    }
+}
 
 // use this one for ... service configuration
 bool embObjMotionControl::fromConfig_readServiceCfg(yarp::os::Searchable &config)
@@ -1571,7 +1599,7 @@ bool embObjMotionControl::init()
 
         jconfig.gearbox_E2J = _gearbox_E2J[logico];
         
-        jconfig.deadzone = _deadzone[logico];
+        jconfig.deadzone = _measureConverter->posA2E(_deadzone[logico], fisico);
 
         jconfig.tcfiltertype=_tpids[logico].filterType;
 

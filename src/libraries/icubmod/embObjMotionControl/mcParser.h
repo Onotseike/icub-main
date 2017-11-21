@@ -383,7 +383,7 @@ public:
     bool parseGearboxValues(yarp::os::Searchable &config, double gearbox_M2J[], double gearbox_E2J[]);
     bool parseMechanicalsFlags(yarp::os::Searchable &config, int useMotorSpeedFbk[]);
     bool parseImpedanceGroup(yarp::os::Searchable &config,std::vector<eomc_impedanceParameters> &impedance);
-    bool parseDeadzoneValue(yarp::os::Searchable &config, double deadzone[]);
+    bool parseDeadzoneValue(yarp::os::Searchable &config, double deadzone[], bool *found);
 };
 
 #endif // include guard
