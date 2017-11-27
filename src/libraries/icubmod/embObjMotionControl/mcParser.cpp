@@ -1651,18 +1651,24 @@ bool mcParser::parseGearboxValues(yarp::os::Searchable &config, double gearbox_M
 
 bool mcParser::parseDeadzoneValue(yarp::os::Searchable &config, double deadzone[], bool *found)
 {
-    Bottle general = config.findGroup("GENERAL");
+//     Bottle general = config.findGroup("GENERAL");
+//     if (general.isNull())
+//     {
+//         yError() << "embObjMC BOARD " << _boardname << "Missing General group" ;
+//         return false;
+//     }
+
+    Bottle general = config.findGroup("OTHER_CONTROL_PARAMETERS");
     if (general.isNull())
     {
-        yError() << "embObjMC BOARD " << _boardname << "Missing General group" ;
+        yError() << "embObjMC BOARD " << _boardname << "Missing OTHER_CONTROL_PARAMETERS group" ;
         return false;
-    }
-    
+    }    
     Bottle xtmp;
     int i;
     
     // DeadZone
-    if (!extractGroup(general, xtmp, "DeadZone", "The deadzone of joint", _njoints))
+    if (!extractGroup(general, xtmp, "deadZone", "The deadzone of joint", _njoints))
     {
         yWarning() << "embObjMC BOARD " << _boardname << "Missing DeadZone parameter. I'll use default value. (see documentation for more datails)";
         *found = false;
